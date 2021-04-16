@@ -1,10 +1,10 @@
 import React from 'react'
 
-import { ExampleComponent } from 'spread-eagle'
+import SpreadEagle from 'spread-eagle'
 import 'spread-eagle/dist/index.css'
-
+      
 const App = () => {
-  return <ExampleComponent text="Create React Library Example 😄" />
+  return <SpreadEagle sheetName="home" bookId="16oebHDZ46f7noY1fEn7EaiJ8f1CtxfO0Fd0R2jsODfo" />
 }
 
 export default App
