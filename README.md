@@ -7,21 +7,31 @@
 ## Install
 
 ```bash
-npm install --save spread-eagle
+npm install spread-eagle
+```
+
+```bash
+yarn add spread-eagle
 ```
 
 ## Usage
+1. Create a Google Sheet that follows this [structure](https://docs.google.com/spreadsheets/d/16oebHDZ46f7noY1fEn7EaiJ8f1CtxfO0Fd0R2jsODfo/edit#gid=1596527936).
+  * A template sheet is mandatory
+  * At least one "blueprint" sheet is mandatory 
+2. Publish the sheet to the web. 
+  * File > Publish to the Web (Entire Document, Web)
+3. Pass in the workbook ID via props (bookId) and the corresponding sheet (sheetName)
 
 ```jsx
 import React, { Component } from 'react'
 
-import MyComponent from 'spread-eagle'
+import SpreadEagle from 'spread-eagle'
 import 'spread-eagle/dist/index.css'
 
-class Example extends Component {
-  render() {
-    return <MyComponent />
-  }
+const App = () => {
+  return (
+    <SpreadEagle bookId="16oebHDZ46f7noY1fEn7EaiJ8f1CtxfO0Fd0R2jsODfo" sheetName="home">
+  )
 }
 ```
 
