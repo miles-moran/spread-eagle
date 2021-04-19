@@ -23,10 +23,7 @@ const SpreadEagle = ({ sheets, sheetName }) => {
   const [page, setPage] = useState(<Loading />)
   const [loaded, setLoaded] = useState(false)
 
-
   const readBlueprint = (entries, template) => {
-    console.log(template)
-    console.log('reading blueprint')
     const children = []
     let args = {}
     let elementType = null
@@ -49,12 +46,15 @@ const SpreadEagle = ({ sheets, sheetName }) => {
           elementType = template[text]
           args = {}
         }
-      }
-      if (column === 'B') {
+      } else if (column === 'B') {
         key = text
       }
-      if (column === 'C') {
-        args[key] = text
+      else {
+        if (!args[key]){
+          args[key] = [text]
+        } else {
+          args[key] = [...args[key], text]
+        }
       }
     })
     const raw = elementType.code
@@ -63,13 +63,10 @@ const SpreadEagle = ({ sheets, sheetName }) => {
     const Component = func(React)
     const element = <Component args={args} />
     children.push(element)
-    console.log(children)
     return children
   }
 
   const readTemplate = (entries) => {
-    console.log(entries)
-    console.log('reading template')
     const header = {}
     const rows = {}
     entries.forEach((entry) => {
@@ -93,9 +90,8 @@ const SpreadEagle = ({ sheets, sheetName }) => {
     return elements
   }
 
-  
   //this is what is funky
-  if (!sheets) {  
+  if (!sheets) {
     return page
   } else {
     if (!loaded) {

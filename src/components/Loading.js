@@ -19,3 +19,8 @@ const Loading = () => {
   
   export default Loading;
   
+
+  ({ args:{list}}) => {
+    return (
+    <div>{list.map(l => <div>l</div>)}</div>
+    )}
