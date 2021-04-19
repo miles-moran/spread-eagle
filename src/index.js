@@ -4,29 +4,26 @@ import { transform } from '@babel/core'
 import preset from '@babel/preset-react'
 import Loading from './components/Loading'
 // import styles from './styles.module.css'
-const SpreadEagle = ({ bookId, sheetName }) => {
+
+export const getSheets = (bookId) => {
   const url = `https://spreadsheets.google.com/feeds/worksheets/${bookId}/public/basic?alt=json`
+  return axios.get(url).then((res) => {
+    const links = []
+    res.data.feed.entry.forEach((r) =>
+      links.push(
+        `${r.link.find((l) => l.href.includes('/cells/')).href}?alt=json`
+      )
+    )
+    const promises = links.map((l) => axios.get(l).then((a) => a.data.feed))
+    return Promise.all(promises)
+  })
+}
+
+const SpreadEagle = ({ sheets, sheetName }) => {
   const [page, setPage] = useState(<Loading />)
-  useEffect(() => {
-    axios.get(url).then((res) => {
-      const sheets = res.data.feed.entry
-      const template = sheets.find((sheet) => sheet.title.$t === 'template')
-      const home = sheets.find((sheet) => sheet.title.$t === sheetName)
-      const templateURL = `${
-        template.link.find((l) => l.href.includes('/cells/')).href
-      }?alt=json`
-      const homeURL = `${
-        home.link.find((l) => l.href.includes('/cells/')).href
-      }?alt=json`
-      axios.get(templateURL).then((templateRes) => {
-        const temp = readTemplate(templateRes.data.feed.entry)
-        axios.get(homeURL).then((homeRes) => {
-          const ho = readBlueprint(homeRes.data.feed.entry, temp)
-          setPage(ho)
-        })
-      })
-    })
-  }, [])
+  const [loaded, setLoaded] = useState(false)
+
+
   const readBlueprint = (entries, template) => {
     console.log(template)
     console.log('reading blueprint')
@@ -71,6 +68,7 @@ const SpreadEagle = ({ bookId, sheetName }) => {
   }
 
   const readTemplate = (entries) => {
+    console.log(entries)
     console.log('reading template')
     const header = {}
     const rows = {}
@@ -94,6 +92,22 @@ const SpreadEagle = ({ bookId, sheetName }) => {
     })
     return elements
   }
+
+  
+  //this is what is funky
+  if (!sheets) {  
+    return page
+  } else {
+    if (!loaded) {
+      setLoaded(true)
+      const dict = {}
+      sheets.forEach((sheet) => (dict[sheet.title.$t] = sheet))
+      const template = readTemplate(dict['template'].entry)
+      const sheet = readBlueprint(dict[sheetName].entry, template)
+      setPage(sheet)
+    }
+  }
+
   return <div>{page}</div>
 }
 
