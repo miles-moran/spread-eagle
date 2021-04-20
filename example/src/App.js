@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 
-import SpreadEagle, { getSheets } from 'spread-eagle'
+import { Spread, getSheets } from 'spread-eagle'
 import 'spread-eagle/dist/index.css'
 const App = () => {
   const [sheets, setSheets] = useState()
@@ -11,8 +11,8 @@ const App = () => {
   }, [])
   return (
     <>
-      <SpreadEagle sheetName='home' sheets={sheets} />
-      <SpreadEagle sheetName='test' sheets={sheets} />
+      <Spread sheetName='home' sheets={sheets} />
+      <Spread sheetName='test' sheets={sheets} />
     </>
   )
 }

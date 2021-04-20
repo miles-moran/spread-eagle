@@ -23,16 +23,26 @@ yarn add spread-eagle
 3. Pass in the workbook ID via props (bookId) and the corresponding sheet (sheetName)
 
 ```jsx
-import React, { Component } from 'react'
+import React, { useState, useEffect } from 'react'
 
-import SpreadEagle from 'spread-eagle'
+import { Spread, getSheets } from 'spread-eagle'
 import 'spread-eagle/dist/index.css'
-
 const App = () => {
+  const [sheets, setSheets] = useState()
+  useEffect(() => {
+    getSheets('16oebHDZ46f7noY1fEn7EaiJ8f1CtxfO0Fd0R2jsODfo').then((res) =>
+      setSheets(res)
+    )
+  }, [])
   return (
-    <SpreadEagle bookId="16oebHDZ46f7noY1fEn7EaiJ8f1CtxfO0Fd0R2jsODfo" sheetName="home">
+    <>
+      <Spread sheetName='home' sheets={sheets} />
+    </>
   )
 }
+
+export default App
+
 ```
 
 ## License

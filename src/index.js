@@ -1,5 +1,5 @@
 import axios from 'axios'
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { transform } from '@babel/core'
 import preset from '@babel/preset-react'
 import Loading from './components/Loading'
@@ -19,7 +19,7 @@ export const getSheets = (bookId) => {
   })
 }
 
-const SpreadEagle = ({ sheets, sheetName }) => {
+export const Spread = ({ sheets, sheetName }) => {
   const [page, setPage] = useState(<Loading />)
   const [loaded, setLoaded] = useState(false)
 
@@ -28,7 +28,7 @@ const SpreadEagle = ({ sheets, sheetName }) => {
     let args = {}
     let elementType = null
     let key = ''
-    entries.forEach((entry) => {
+    entries.forEach((entry, i) => {
       const cord = entry.title.$t
       const row = cord.slice(1 - cord.length)
       const column = cord[0]
@@ -41,7 +41,7 @@ const SpreadEagle = ({ sheets, sheetName }) => {
           const code = transform(raw, { presets: [[preset]] }).code
           const func = new Function('React', `return ${code}`)
           const Component = func(React)
-          const element = <Component args={args} />
+          const element = <Component key={i} args={args} />
           children.push(element)
           elementType = template[text]
           args = {}
@@ -61,7 +61,7 @@ const SpreadEagle = ({ sheets, sheetName }) => {
     const code = transform(raw, { presets: [[preset]] }).code
     const func = new Function('React', `return ${code}`)
     const Component = func(React)
-    const element = <Component args={args} />
+    const element = <Component key={"f"} args={args} />
     children.push(element)
     return children
   }
@@ -106,5 +106,3 @@ const SpreadEagle = ({ sheets, sheetName }) => {
 
   return <div>{page}</div>
 }
-
-export default SpreadEagle
